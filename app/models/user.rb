@@ -5,14 +5,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
   Stripe.api_key = 'sk_test_M4Nqnb3V3PSQevmu5B4tbhUb00vqD9QcO2'
   belongs_to :plan
-  
+
   has_one :profile
   attr_accessor :stripe_card_token
   def save_with_subscription
     if valid?
-      customer = Stripe::Customer.create(description: email, plan: plan_id, source: stripe_card_token)
+      customer = Stripe::Customer.create( { description: email, plan: plan_id, card: stripe_card_token, })
       self.stripe_customer_token = customer.id
       save!
     end
   end
-end
+end 
